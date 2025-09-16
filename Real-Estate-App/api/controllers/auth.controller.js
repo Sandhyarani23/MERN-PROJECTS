@@ -37,10 +37,12 @@ export const login =async (req, res) => {
         if(!isPasswordcrt) return res.status(401).json({message:"Invalid Credentials!"});
         const age=1000*60*60*24*7;
         const token=jwt.sign({
-            id:user.id
+            id:user.id,
+            isAdmin:true,
         },process.env.JWT_SECRET_KEY,
     {expiresIn:age});
 
+    const {password:userPassword,...userInfo}=user;
 
         // res.setHeader("Set-Cookie","test="+"myValue").json("success")
         
@@ -48,7 +50,7 @@ export const login =async (req, res) => {
             httpOnly:true,
             // secure:true,
             maxAge: age,
-        }).status(200).json({message:"Login Successful"})
+        }).status(200).json(userPassword);
     }
     catch(err){
         console.log(err);
